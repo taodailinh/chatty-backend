@@ -16,6 +16,9 @@ import compression from "compression";
 import HTTP_STATUS from "http-status-codes";
 import "express-async-errors";
 import { config } from "./config";
+import { Server } from "socket.io";
+import { createClient } from "redis";
+import { createAdapter } from "socket.io-redis";
 
 const SERVER_PORT = 5000;
 
@@ -72,7 +75,14 @@ export class ChattyServer {
     }
   }
 
-  private createSocketIO(httpServer: http.Server): void {}
+  private createSocketIO(httpServer: http.Server): void {
+    const io: Server = new Server(httpServer, {
+      cors: {
+        origin: config.CLIENT_URL,
+        methods: ["POST", "GET", "DELETE", "PUT", "OPTIONS"],
+      },
+    });
+  }
 
   private startHttpServer(httpServer: http.Server): void {
     httpServer.listen(SERVER_PORT, () =>
