@@ -36,6 +36,7 @@ export class ChattyServer {
     app.use(
       cookierSession({
         name: 'session',
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         keys: [config.SECRET_KEY_ONE!, config.SECRET_KEY_TWO!],
         maxAge: 24 * 7 * 3600000,
         secure: config.NODE_ENV !== 'development'
