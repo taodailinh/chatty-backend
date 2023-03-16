@@ -1,4 +1,5 @@
-import cloudinary, { UploadApiResponse, UploadApiErrorResponse } from 'cloudinary';
+/* eslint-disable space-before-function-paren */
+import { v2 as cloudinary, UploadApiResponse, UploadApiErrorResponse } from 'cloudinary';
 import { ErrorReply } from 'redis';
 
 export function uploads(
@@ -8,7 +9,7 @@ export function uploads(
   invalidate?: boolean
 ): Promise<UploadApiResponse | UploadApiErrorResponse | undefined> {
   return new Promise((resolve) => {
-    cloudinary.v2.uploader.upload(
+    cloudinary.uploader.upload(
       file,
       { public_id, overwrite, invalidate },
       (error: UploadApiErrorResponse | undefined, result: UploadApiResponse | undefined) => {

@@ -4,7 +4,7 @@ import databaseConnection from './setupDatabase';
 import { config } from './config';
 class Application {
   public initialize(): void {
-    this.loadConfig;
+    this.loadConfig();
     databaseConnection();
     const app: Express = express();
     const server: ChattyServer = new ChattyServer(app);
