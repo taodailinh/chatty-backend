@@ -42,7 +42,7 @@ export class SignUp {
 
     // Add to Redis cache
     const userDataForCache: IUserDocument = SignUp.prototype.userData(authData, userObjectId);
-    userDataForCache.profilePicture = `https://res/cloudinary.com/${config.CLOUD_NAME}/image/upload/v${result.version}/${userObjectId}`;
+    userDataForCache.profilePicture = `https://res.cloudinary.com/${config.CLOUD_NAME}/image/upload/v${result.version}/${userObjectId}`;
     await userCache.saveUserToCache(`${userObjectId}`, uId, userDataForCache);
   }
   private signUpData(data: ISignUpData): IAuthDocument {
