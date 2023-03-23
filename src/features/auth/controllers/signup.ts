@@ -13,6 +13,7 @@ import { UserCache } from '@service/redis/user.cache';
 import { config } from '@root/config';
 import { omit } from 'lodash';
 import { authQueue } from '@service/queues/auth.queue';
+import { userQueue } from '@service/queues/user.queue';
 
 const userCache: UserCache = new UserCache();
 
@@ -50,6 +51,7 @@ export class SignUp {
     // Add to database
     omit(userDataForCache, ['uId', 'username', 'email', 'avatarColor', 'password']);
     authQueue.addAuthUserJob('addAuthUserJob', { value: userDataForCache });
+    userQueue.addUserJob('addUserToDB', { value: userDataForCache });
   }
   private signUpData(data: ISignUpData): IAuthDocument {
     const { _id, username, email, uId, password, avatarColor } = data;
