@@ -14,6 +14,8 @@ import { config } from '@root/config';
 import { omit } from 'lodash';
 import { authQueue } from '@service/queues/auth.queue';
 import { userQueue } from '@service/queues/user.queue';
+import JWT from 'jsonwebtoken';
+import { ReasonPhrases, StatusCodes, getReasonPhrase, getStatusCode } from 'http-status-codes';
 
 const userCache: UserCache = new UserCache();
 
@@ -38,6 +40,7 @@ export class SignUp {
       avatarColor
     });
 
+    // Get respond from cloudinary after upload
     const result: UploadApiResponse = (await uploads(avatarImage, `${userObjectId}`, true, true)) as UploadApiResponse;
     if (!result.public_id) {
       throw new BadRequestError('Error upload the image. Try again');
@@ -52,7 +55,26 @@ export class SignUp {
     omit(userDataForCache, ['uId', 'username', 'email', 'avatarColor', 'password']);
     authQueue.addAuthUserJob('addAuthUserJob', { value: userDataForCache });
     userQueue.addUserJob('addUserToDB', { value: userDataForCache });
+
+    const userJwt: string = SignUp.prototype.signToken(authData, userObjectId);
+    // Add data to the session
+    req.session = { jwt: userJwt };
+    res.status(StatusCodes.CREATED).json({ message: 'User created successfully', user: userDataForCache, token: userJwt });
   }
+
+  private signToken(data: IAuthDocument, userObjectId: ObjectId): string {
+    return JWT.sign(
+      {
+        userId: userObjectId,
+        uId: data.uId,
+        email: data.email,
+        username: data.username,
+        avatarColor: data.avatarColor
+      },
+      config.JWT_TOKEN!
+    );
+  }
+
   private signUpData(data: ISignUpData): IAuthDocument {
     const { _id, username, email, uId, password, avatarColor } = data;
     return {

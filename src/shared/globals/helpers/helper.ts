@@ -14,7 +14,7 @@ export class Helpers {
     const character = '0123456789';
     let result = ' ';
     const characterLenght = character.length;
-    for (let i = 0; i < characterLenght; i++) {
+    for (let i = 0; i < integerLength; i++) {
       result += character.charAt(Math.floor(Math.random() * characterLenght));
     }
     return parseInt(result, 10);
