@@ -26,3 +26,10 @@ withCredentials: true
 "username": "t a o",
 "password": "9034098"
 }
+
+###
+GET {{baseUrl}}/{{urlPath}}/signout
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
