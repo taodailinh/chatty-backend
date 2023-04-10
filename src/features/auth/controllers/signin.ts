@@ -40,6 +40,6 @@ export class SignIn {
 const userDocument: IUserDocument = {...user, username: existingUser!.username, authId: existingUser!._id, email: existingUser!.email, avatarColor: existingUser!.avatarColor, uId: existingUser!.uId, createdAt: existingUser!.createdAt} as IUserDocument;
 
 
-    res.status(StatusCodes.OK).json({ message: 'Login successfully', user: existingUser, token: userJwt });
+    res.status(StatusCodes.OK).json({ message: 'Login successfully', user: userDocument, token: userJwt });
   }
 }
