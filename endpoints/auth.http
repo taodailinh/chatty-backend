@@ -8,7 +8,7 @@ Accept: application/json
 withCredentials: true
 
 {
-"username": "t a o",
+"username": "t a o 3",
 "password": "9034098",
 "email": "tata@gmail.com",
 "avatarColor": "red",

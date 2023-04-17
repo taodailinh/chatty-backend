@@ -47,13 +47,13 @@ export class SignUp {
     }
 
     // Add to Redis cache
-    const userDataForCache: IUserDocument = SignUp.prototype.userData(authData, userObjectId);
+    const userDataForCache: IUserDocument = SignUp.prototype.userData(authData, userObjectId); 
     userDataForCache.profilePicture = `https://res.cloudinary.com/${config.CLOUD_NAME}/image/upload/v${result.version}/${userObjectId}`;
     await userCache.saveUserToCache(`${userObjectId}`, uId, userDataForCache);
 
     // Add to database
     omit(userDataForCache, ['uId', 'username', 'email', 'avatarColor', 'password']);
-    authQueue.addAuthUserJob('addAuthUserJob', { value: userDataForCache });
+    authQueue.addAuthUserJob('addAuthUserJob', { value: authData });
     userQueue.addUserJob('addUserToDB', { value: userDataForCache });
 
     const userJwt: string = SignUp.prototype.signToken(authData, userObjectId);
@@ -90,9 +90,10 @@ export class SignUp {
 
   private userData(data: IAuthDocument, userObjectId: ObjectId): IUserDocument {
     const { _id, username, email, uId, password, avatarColor } = data;
+    const authId = _id;
     return {
       _id: userObjectId,
-      authId: _id,
+      authId: authId,
       uId,
       username: Helpers.firstLetterUppercase(username),
       email,
