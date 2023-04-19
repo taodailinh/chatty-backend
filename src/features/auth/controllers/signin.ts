@@ -9,6 +9,7 @@ import { BadRequestError } from '@global/helpers/error-handler';
 import { loginSchema } from '@auth/schemes/signin';
 import { IAuthDocument } from '@auth/interfaces/auth.interface';
 import { IUserDocument } from '@user/interfaces/user.interface';
+import {mailTransport} from '@service/mail/mail.transport';
 
 export class SignIn {
   @joiValidation(loginSchema)
@@ -38,7 +39,6 @@ export class SignIn {
     req.session = { jwt: userJwt };
     
 const userDocument: IUserDocument = {...user, username: existingUser!.username, authId: existingUser!._id, email: existingUser!.email, avatarColor: existingUser!.avatarColor, uId: existingUser!.uId, createdAt: existingUser!.createdAt} as IUserDocument;
-
 
     res.status(StatusCodes.OK).json({ message: 'Login successfully', user: userDocument, token: userJwt });
   }

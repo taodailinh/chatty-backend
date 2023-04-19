@@ -30,7 +30,7 @@ class MailTransport {
  const transporter: Mail = nodemailer.createTransport({
     host: "smtp.ethereal.email",
     port: 587,
-    secure: false, // true for 465, false for other ports
+    // secure: false, // true for 465, false for other ports
     auth: {
       user: config.SENDER_EMAIL!,
       pass: config.SENDER_EMAIL_PASSWORD!,
@@ -44,7 +44,7 @@ class MailTransport {
     html:body
   }
   try {
-    transporter.sendMail(mailOptions);
+    await transporter.sendMail(mailOptions);
     log.info('Development email sent successfully')
   } catch (error) {
     log.error('Error sending email',error)
@@ -54,13 +54,13 @@ class MailTransport {
 
     private async productionEmailSender(receiverEmail:string,subject:string,body:string): Promise<void> {
   const mailOptions: IMailOptions = {
-    from:`Chatty app <${config.SENDER_EMAIL!}>`,
+    from:`Chatty app <${config.SENDGRID_SENDER!}>`,
     to: receiverEmail,
     subject,
     html:body
   }
   try {
-    sendGridMail.send(mailOptions);
+   await sendGridMail.send(mailOptions);
     log.info('Production mail sent successfully!');
   } catch (error) {
     log.error('Error sending email',error)
