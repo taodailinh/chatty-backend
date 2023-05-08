@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { joiValidation } from '@global/decorators/joi-validation.decorators';
 import JWT from 'jsonwebtoken';
-import { ReasonPhrases, StatusCodes, getReasonPhrase, getStatusCode } from 'http-status-codes';
+import { StatusCodes } from 'http-status-codes';
 import { config } from '@root/config';
 import { authService } from '@service/db/auth.service';
 import { userService } from '@service/db/user.service';
@@ -26,6 +26,7 @@ export class SignIn {
 
     const user: IUserDocument = await userService.getUserByAuthId(`${existingUser._id}`);
 
+    console.log(user);
     const userJwt: string = JWT.sign(
       {
         userId: user._id,
@@ -37,9 +38,20 @@ export class SignIn {
       config.JWT_TOKEN!
     );
     req.session = { jwt: userJwt };
-    
-const userDocument: IUserDocument = {...user, username: existingUser!.username, authId: existingUser!._id, email: existingUser!.email, avatarColor: existingUser!.avatarColor, uId: existingUser!.uId, createdAt: existingUser!.createdAt} as IUserDocument;
 
+<<<<<<< Updated upstream
+=======
+    const userDocument: IUserDocument = {
+      ...user,
+      username: existingUser!.username,
+      authId: existingUser!._id,
+      email: existingUser!.email,
+      avatarColor: existingUser!.avatarColor,
+      uId: existingUser!.uId,
+      createdAt: existingUser!.createdAt
+    } as IUserDocument;
+
+>>>>>>> Stashed changes
     res.status(StatusCodes.OK).json({ message: 'Login successfully', user: userDocument, token: userJwt });
   }
 }

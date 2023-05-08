@@ -4,7 +4,7 @@ import databaseConnection from './setupDatabase';
 import { config } from './config';
 import Logger from 'bunyan';
 
-const log:Logger = config.createLogger('app.tss');
+const log: Logger = config.createLogger('app.tss');
 
 class Application {
   public initialize(): void {
