@@ -13,6 +13,7 @@ class AuthRoutes {
     this.router.post('/signup', SignUp.prototype.create);
     this.router.post('/signin', SignIn.prototype.read);
     this.router.post('/password-reset', Password.prototype.create);
+    this.router.post('/reset-password/:token', Password.prototype.update);
 
     return this.router; // Vi sao phai return?
   }
