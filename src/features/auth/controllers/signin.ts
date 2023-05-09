@@ -9,7 +9,7 @@ import { BadRequestError } from '@global/helpers/error-handler';
 import { loginSchema } from '@auth/schemes/signin';
 import { IAuthDocument } from '@auth/interfaces/auth.interface';
 import { IUserDocument } from '@user/interfaces/user.interface';
-import {mailTransport} from '@service/mail/mail.transport';
+import { mailTransport } from '@service/mail/mail.transport';
 
 export class SignIn {
   @joiValidation(loginSchema)
@@ -39,8 +39,6 @@ export class SignIn {
     );
     req.session = { jwt: userJwt };
 
-<<<<<<< Updated upstream
-=======
     const userDocument: IUserDocument = {
       ...user,
       username: existingUser!.username,
@@ -51,7 +49,6 @@ export class SignIn {
       createdAt: existingUser!.createdAt
     } as IUserDocument;
 
->>>>>>> Stashed changes
     res.status(StatusCodes.OK).json({ message: 'Login successfully', user: userDocument, token: userJwt });
   }
 }
