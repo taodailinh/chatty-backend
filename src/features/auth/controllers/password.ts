@@ -1,15 +1,11 @@
 import { Request, Response } from 'express';
 import { joiValidation } from '@global/decorators/joi-validation.decorators';
-import JWT from 'jsonwebtoken';
 import { StatusCodes } from 'http-status-codes';
 import { config } from '@root/config';
 import { authService } from '@service/db/auth.service';
-import { userService } from '@service/db/user.service';
 import { BadRequestError } from '@global/helpers/error-handler';
-import { loginSchema } from '@auth/schemes/signin';
 import { IAuthDocument } from '@auth/interfaces/auth.interface';
-import { IResetPasswordParams, IUserDocument } from '@user/interfaces/user.interface';
-import { mailTransport } from '@service/mail/mail.transport';
+import { IResetPasswordParams } from '@user/interfaces/user.interface';
 import { emailSchema } from '@auth/schemes/password';
 import crypto from 'crypto';
 import { forgotPasswordTemplate } from '@service/mail/templates/forgot-password-templates/forgot-password-template';
@@ -19,6 +15,7 @@ import moment from 'moment';
 import { resetPasswordTemplate } from '@service/mail/templates/reset-password/reset-password-template';
 
 export class Password {
+  // Method to create a reset token to the auth document and send the email containing the link to reset password
   @joiValidation(emailSchema)
   public async create(req: Request, res: Response): Promise<void> {
     const { email } = req.body;
@@ -41,21 +38,26 @@ export class Password {
     const { token } = req.params;
 
     const existingUser: IAuthDocument = await authService.getAuthUserByPasswordToken(token);
+
     if (!existingUser) {
       throw new BadRequestError('Reset token has expired!');
     }
 
+    // Set the new password to database and clear password reset token
     existingUser.password = password;
     existingUser.passwordResetExpires = undefined;
     existingUser.passwordResetToken = undefined;
     await existingUser.save();
 
+    // Create template params for the email
     const templateParams: IResetPasswordParams = {
       username: existingUser.username,
       email: existingUser.email,
       ipaddress: publicIP.address(),
       date: moment().format('DD/MM/YYYY HH:mm')
     };
+
+    // Create the template
     const template: string = resetPasswordTemplate.passwordResetConfirmTemplate(templateParams);
     emailQueue.addEmailJob('forgetPasswordEmail', { template, receiverEmail: existingUser.email, subject: 'Password reset confirmation' });
     res.status(StatusCodes.OK).json({ message: 'Password sucessfully changed!' });
