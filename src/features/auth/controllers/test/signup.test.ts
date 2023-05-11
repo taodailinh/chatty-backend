@@ -1,31 +1,28 @@
-import { AuthPayload } from '@auth/interfaces/auth.interface';
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import { authMockRequest, authMockResponse } from '@root/mocks/auth.mock';
+import { SignUp } from '@auth/controllers/signup';
+import { CustomError } from '@global/helpers/error-handler';
+// import { authMock } from '@root/mocks/auth.mock';
 
-export const authMockRequest = (sessionData: IJWT, body: IAuthMock, currentUser?: AuthPayload | null, params?: any) => ({
-  session: sessionData,
-  body,
-  params,
-  currentUser
+jest.mock('@service/queues/base.queue.ts');
+jest.mock('@service/queues/auth.queue.ts');
+jest.mock('@service/queues/user.queue.ts');
+jest.mock('@service/redis/user.cache.ts');
+jest.mock('@global/helpers/cloudinary-upload.ts');
+
+describe('SignUp', () => {
+  it('Should throw an error if username is not available', () => {
+    const req: Request = authMockRequest(
+      {},
+      {
+        username: '',
+        email: 'manny@test.com',
+        password: 'qwerty',
+        avatarColor: 'red',
+        avatarImage: 'fasofasolj'
+      }
+    ) as unknown as Request;
+    const res: Response = authMockResponse();
+    SignUp.prototype.create(req, res).catch((error: CustomError) => console.log(error));
+  });
 });
-
-export const authMockResponse = (): Response => {
-  const res: Response = {} as Response;
-  res.status = jest.fn().mockReturnValue(res);
-  res.json = jest.fn().mockReturnValue(res);
-  return res;
-};
-
-export interface IJWT {
-  jwt: string;
-}
-
-export interface IAuthMock {
-  _id: string;
-  username: string;
-  email: string;
-  uId: string;
-  password: string;
-  avatarColor: string;
-  avatarImage: string;
-  createdAt: Date | string;
-}
