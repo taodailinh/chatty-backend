@@ -6,7 +6,7 @@ import { authService } from '@service/db/auth.service';
 import { BadRequestError } from '@global/helpers/error-handler';
 import { IAuthDocument } from '@auth/interfaces/auth.interface';
 import { IResetPasswordParams } from '@user/interfaces/user.interface';
-import { emailSchema } from '@auth/schemes/password';
+import { emailSchema, passwordSchema } from '@auth/schemes/password';
 import crypto from 'crypto';
 import { forgotPasswordTemplate } from '@service/mail/templates/forgot-password-templates/forgot-password-template';
 import { emailQueue } from '@service/queues/emails.queue';
@@ -29,10 +29,10 @@ export class Password {
     const resetLink = `${config.CLIENT_URL}/reset-password?token=${randomCharacters}`;
     const template: string = forgotPasswordTemplate.passwordResetTemplate(existingUser.username, resetLink);
     emailQueue.addEmailJob('forgetPasswordEmail', { template, receiverEmail: email, subject: 'Reset your password' });
-    res.status(StatusCodes.OK).json({ message: 'Password reset email sent' });
+    res.status(StatusCodes.OK).json({ message: 'Password reset email sent.' });
   }
 
-  @joiValidation(emailSchema)
+  @joiValidation(passwordSchema)
   public async update(req: Request, res: Response): Promise<void> {
     const { password } = req.body;
     const { token } = req.params;
@@ -40,7 +40,7 @@ export class Password {
     const existingUser: IAuthDocument = await authService.getAuthUserByPasswordToken(token);
 
     if (!existingUser) {
-      throw new BadRequestError('Reset token has expired!');
+      throw new BadRequestError('Reset token has expired.');
     }
 
     // Set the new password to database and clear password reset token
@@ -60,6 +60,6 @@ export class Password {
     // Create the template
     const template: string = resetPasswordTemplate.passwordResetConfirmTemplate(templateParams);
     emailQueue.addEmailJob('forgetPasswordEmail', { template, receiverEmail: existingUser.email, subject: 'Password reset confirmation' });
-    res.status(StatusCodes.OK).json({ message: 'Password sucessfully changed!' });
+    res.status(StatusCodes.OK).json({ message: 'Password successfully updated.' });
   }
 }
