@@ -19,9 +19,9 @@ export class Helpers {
     }
     return parseInt(result, 10);
   }
-  static parseJson(prop: string) : any {
+  static parseJson(prop: string): any {
     try {
-     return JSON.parse(prop);
+      return JSON.parse(prop);
     } catch (error) {
       return prop;
     }
