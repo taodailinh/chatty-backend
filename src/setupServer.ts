@@ -15,6 +15,7 @@ import { createClient } from 'redis';
 import { createAdapter } from '@socket.io/redis-adapter';
 import applicationRoutes from './routes';
 import { CustomError, IErrorResponse } from './shared/globals/helpers/error-handler';
+import { SocketIOPostHander } from '@socket/post';
 
 const SERVER_PORT = 5000;
 const log: Logger = config.createLogger('server');
@@ -30,6 +31,7 @@ export class ChattyServer {
     this.standardMiddleware(this.app);
     this.routeMiddleware(this.app);
     this.startServer(this.app);
+    this.globalErrorHandler(this.app);
   }
 
   private securityMiddleware(app: Application): void {
@@ -106,5 +108,8 @@ export class ChattyServer {
     log.info(`Server has started with process ${process.pid}`);
     httpServer.listen(SERVER_PORT, () => log.info(`Server is running on port ${SERVER_PORT}`));
   }
-  private socketIOConnections(io: Server): void {}
+  private socketIOConnections(io: Server): void {
+    const postSocketHandler: SocketIOPostHander = new SocketIOPostHander(io);
+    postSocketHandler.listen();
+  }
 }
