@@ -9,7 +9,6 @@ const log: Logger = config.createLogger('authLogger');
 class AuthQueue extends BaseQueue {
   constructor() {
     super('auth');
-    log.info('Constructing');
     this.processJob('addAuthUserJob', 5, authWorker.addAuthUserToDB);
   }
   public addAuthUserJob(name: string, data: IAuthJob): void {

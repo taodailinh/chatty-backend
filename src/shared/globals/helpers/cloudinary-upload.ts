@@ -1,6 +1,5 @@
 /* eslint-disable space-before-function-paren */
 import { v2 as cloudinary, UploadApiResponse, UploadApiErrorResponse } from 'cloudinary';
-import { ErrorReply } from 'redis';
 
 export function uploads(
   file: string,
