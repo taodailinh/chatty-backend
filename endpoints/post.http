@@ -1,0 +1,34 @@
+@baseUrl = http://localhost:5000
+@urlPath = api/v1
+
+POST {{baseUrl}}/{{urlPath}}/post
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+"post": "",
+"bgColor": "",
+"privacy":"",
+"gifUrl": "",
+"profilePicture":"",
+"feelings":""
+}
+
+
+###
+POST {{baseUrl}}/{{urlPath}}/signin
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+{
+"username": "t a o 3",
+"password": "9034098"
+}
+
+###
+GET {{baseUrl}}/{{urlPath}}/signout
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
