@@ -8,8 +8,8 @@ Accept: application/json
 withCredentials: true
 
 {
-"post": "",
-"bgColor": "",
+"post": "new post",
+"bgColor": "#f34292",
 "privacy":"",
 "gifUrl": "",
 "profilePicture":"",
