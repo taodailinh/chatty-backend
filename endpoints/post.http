@@ -11,10 +11,18 @@ withCredentials: true
 "post": "new post",
 "bgColor": "#f34292",
 "privacy":"",
-"gifUrl": "",
+"gifUrl": "http://google.com/343523",
 "profilePicture":"",
 "feelings":""
 }
+
+###
+GET {{baseUrl}}/{{urlPath}}/posts/all/1
+Content-Type: application/json
+Accept: application/json
+withCredentials: true
+
+
 
 ###
 POST {{baseUrl}}/{{urlPath}}/post/image/post
@@ -29,7 +37,7 @@ withCredentials: true
 "gifUrl": "",
 "profilePicture":"",
 "feelings":"",
-"image":""
+"image":"not empty"
 }
 
 ###
